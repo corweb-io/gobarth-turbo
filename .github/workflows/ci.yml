@@ -20,7 +20,6 @@ env:
   DATABASE_DIRECT_URL: postgresql://placeholder
   SUPABASE_SERVICE_ROLE_KEY: placeholder
   RESEND_API_KEY: placeholder
-  TRIGGER_SECRET_KEY: placeholder
   UPSTASH_REDIS_REST_URL: https://placeholder.upstash.io
   UPSTASH_REDIS_REST_TOKEN: placeholder
   STRIPE_SECRET_KEY: sk_test_placeholder

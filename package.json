@@ -1,0 +1,58 @@
+{
+  "name": "my-app",
+  "private": true,
+  "packageManager": "pnpm@9.0.6",
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:web": "turbo dev --filter=@my-app/nextjs",
+    "dev:mobile": "turbo dev --filter=@my-app/expo",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "format": "biome format --write .",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "test:watch": "vitest",
+    "test:e2e": "pnpm --filter @my-app/nextjs exec playwright test",
+    "test:e2e:ui": "pnpm --filter @my-app/nextjs exec playwright test --ui",
+    "knip": "knip",
+    "gen:package": "hygen package new",
+    "gen:router": "hygen trpc-router new",
+    "gen:component:web": "hygen component web",
+    "gen:component:native": "hygen component native",
+    "gen:schema": "hygen schema new",
+    "storybook": "pnpm --filter @my-app/ui-web storybook",
+    "setup": "bash scripts/setup.sh",
+    "prepare": "husky",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:reset": "supabase db reset",
+    "supabase:types": "supabase gen types typescript --local > packages/auth/src/types.ts",
+    "supabase:studio": "open http://localhost:54423"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx}": [
+      "biome check --write --no-errors-on-unmatched"
+    ],
+    "**/*.{json,md,yaml,yml}": [
+      "biome format --write --no-errors-on-unmatched"
+    ]
+  },
+  "devDependencies": {
+    "@biomejs/biome": "latest",
+    "@changesets/cli": "latest",
+    "@commitlint/cli": "latest",
+    "@commitlint/config-conventional": "latest",
+    "hygen": "latest",
+    "husky": "latest",
+    "knip": "latest",
+    "lint-staged": "latest",
+    "supabase": "^2.78.0",
+    "turbo": "latest",
+    "typescript": "^5.0.0",
+    "vitest": "latest"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  }
+}

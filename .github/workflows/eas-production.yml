@@ -1,0 +1,52 @@
+name: Production Release
+
+on:
+  workflow_dispatch:   # manual trigger only
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-submit:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build production iOS
+        run: eas build --profile production --platform ios --non-interactive --wait
+        working-directory: apps/expo
+
+      - name: Build production Android
+        run: eas build --profile production --platform android --non-interactive --wait
+        working-directory: apps/expo
+
+      - name: Submit to stores via Fastlane
+        run: |
+          gem install fastlane
+          cd apps/expo
+          fastlane ios beta
+          fastlane android beta
+        env:
+          APP_STORE_KEY_ID: ${{ secrets.APP_STORE_KEY_ID }}
+          APP_STORE_ISSUER_ID: ${{ secrets.APP_STORE_ISSUER_ID }}
+          APP_STORE_KEY_CONTENT: ${{ secrets.APP_STORE_KEY_CONTENT }}
+          PLAY_STORE_JSON_KEY: ${{ secrets.PLAY_STORE_JSON_KEY }}

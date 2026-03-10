@@ -1,0 +1,5 @@
+# TODO: Replace these placeholders before running production builds.
+# The eas-production.yml workflow will fail until these are set correctly.
+app_identifier("com.yourcompany.myapp") # TODO: your bundle ID (e.g. "com.gobarth.app")
+apple_id("your@apple.id")              # TODO: your Apple Developer email
+team_id("YOUR_TEAM_ID")                # TODO: your Apple Developer Team ID

@@ -1,0 +1,11 @@
+{
+  "name": "@my-app/i18n",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./locales/*": "./src/locales/*"
+  },
+  "dependencies": {
+    "i18next": "^25.0.0"
+  }
+}

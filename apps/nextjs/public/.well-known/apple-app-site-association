@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "YOURTEAMID.com.yourcompany.myapp",
+        "paths": [
+          "/reset-password",
+          "/invite/*",
+          "/share/*"
+        ]
+      }
+    ]
+  }
+}

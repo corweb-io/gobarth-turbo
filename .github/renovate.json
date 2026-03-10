@@ -1,0 +1,40 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "schedule": ["before 9am on Monday"],
+  "timezone": "Europe/Paris",
+  "packageRules": [
+    {
+      "description": "Auto-merge patch and minor updates for dev dependencies",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "autoMerge": true
+    },
+    {
+      "description": "Group all Expo SDK packages together",
+      "matchPackagePatterns": ["^expo", "^@expo"],
+      "groupName": "Expo SDK"
+    },
+    {
+      "description": "Group all Supabase packages together",
+      "matchPackagePatterns": ["^@supabase"],
+      "groupName": "Supabase"
+    },
+    {
+      "description": "Group all tRPC packages together",
+      "matchPackagePatterns": ["^@trpc"],
+      "groupName": "tRPC"
+    },
+    {
+      "description": "Group all Sentry packages together",
+      "matchPackagePatterns": ["^@sentry"],
+      "groupName": "Sentry"
+    },
+    {
+      "description": "Require manual review for major updates",
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    }
+  ],
+  "ignoreDeps": ["react", "react-native"]
+}

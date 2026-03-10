@@ -1,0 +1,166 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
+  NEXT_PUBLIC_POSTHOG_KEY: placeholder
+  NEXT_PUBLIC_POSTHOG_HOST: https://app.posthog.com
+  NEXT_PUBLIC_SENTRY_DSN: https://placeholder@sentry.io/1
+  DATABASE_URL: postgresql://placeholder
+  DATABASE_DIRECT_URL: postgresql://placeholder
+  SUPABASE_SERVICE_ROLE_KEY: placeholder
+  RESEND_API_KEY: placeholder
+  TRIGGER_SECRET_KEY: placeholder
+  UPSTASH_REDIS_REST_URL: https://placeholder.upstash.io
+  UPSTASH_REDIS_REST_TOKEN: placeholder
+  STRIPE_SECRET_KEY: sk_test_placeholder
+  STRIPE_WEBHOOK_SECRET: whsec_placeholder
+  SENTRY_AUTH_TOKEN: placeholder
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Scan for secrets
+        uses: trufflesecurity/trufflehog@v3.93.7
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Dead code check (knip)
+        run: pnpm knip
+
+      - name: Check for uncommitted migrations
+        run: |
+          pnpm --filter @my-app/db db:generate
+          if [ -n "$(git status --porcelain packages/db/src/migrations)" ]; then
+            echo "::error::Uncommitted migrations detected. Run 'pnpm --filter @my-app/db db:generate' and commit."
+            exit 1
+          fi
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Unit tests
+        run: pnpm vitest run
+
+  build-and-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter @my-app/nextjs exec playwright install --with-deps chromium
+
+      - name: Install Playwright system deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter @my-app/nextjs exec playwright install-deps chromium
+
+      - name: E2E tests (Playwright)
+        run: pnpm test:e2e
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: apps/nextjs/playwright-report/
+          retention-days: 14
+
+      - name: Lighthouse CI
+        run: pnpm --filter @my-app/nextjs exec lhci autorun
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: [quality, test, build-and-e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Deploy Checkly monitoring
+        run: pnpm exec checkly deploy --force
+        working-directory: apps/nextjs
+        env:
+          CHECKLY_API_KEY: ${{ secrets.CHECKLY_API_KEY }}
+          CHECKLY_ACCOUNT_ID: ${{ secrets.CHECKLY_ACCOUNT_ID }}

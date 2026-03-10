@@ -1,0 +1,140 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Dev: All Apps",
+      "type": "shell",
+      "command": "pnpm dev",
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Dev: Web Only",
+      "type": "shell",
+      "command": "pnpm dev:web",
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Dev: Mobile Only",
+      "type": "shell",
+      "command": "pnpm dev:mobile",
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Build All",
+      "type": "shell",
+      "command": "pnpm build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Typecheck",
+      "type": "shell",
+      "command": "pnpm typecheck",
+      "group": "build",
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Lint",
+      "type": "shell",
+      "command": "pnpm lint",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Format",
+      "type": "shell",
+      "command": "pnpm format",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: Unit (Vitest)",
+      "type": "shell",
+      "command": "pnpm test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: Unit (Watch Mode)",
+      "type": "shell",
+      "command": "pnpm test:watch",
+      "group": "test",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Test: E2E (Playwright)",
+      "type": "shell",
+      "command": "pnpm test:e2e",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: Generate Migration",
+      "type": "shell",
+      "command": "pnpm --filter @my-app/api db:generate",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: Run Migrations",
+      "type": "shell",
+      "command": "pnpm --filter @my-app/api db:migrate",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: Open Studio",
+      "type": "shell",
+      "command": "pnpm --filter @my-app/api db:studio",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Supabase: Start",
+      "type": "shell",
+      "command": "pnpm supabase:start",
+      "problemMatcher": []
+    },
+    {
+      "label": "Supabase: Stop",
+      "type": "shell",
+      "command": "pnpm supabase:stop",
+      "problemMatcher": []
+    },
+    {
+      "label": "Supabase: Reset DB",
+      "type": "shell",
+      "command": "pnpm supabase:reset",
+      "problemMatcher": []
+    },
+    {
+      "label": "Supabase: Regenerate Types",
+      "type": "shell",
+      "command": "pnpm supabase:types",
+      "problemMatcher": []
+    },
+    {
+      "label": "Knip: Find Dead Code",
+      "type": "shell",
+      "command": "pnpm knip",
+      "problemMatcher": []
+    },
+    {
+      "label": "Changeset: Create",
+      "type": "shell",
+      "command": "pnpm changeset",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+packages:
+  - apps/*
+  - packages/*
+
+nodeLinker: hoisted
+
+onlyBuiltDependencies:
+  - '@sentry/cli'
+  - core-js
+  - esbuild
+  - protobufjs
+  - sharp
+  - supabase

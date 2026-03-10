@@ -1,0 +1,37 @@
+{
+  "name": "@my-app/api",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./trpc": "./src/trpc.ts"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@trpc/server": "^11.0.0",
+    "@my-app/db": "workspace:*",
+    "@my-app/validators": "workspace:*",
+    "@my-app/auth": "workspace:*",
+    "@supabase/supabase-js": "^2.97.0",
+    "drizzle-orm": "latest",
+    "zod": "^4.0.0",
+    "@upstash/redis": "latest",
+    "@upstash/ratelimit": "latest",
+    "resend": "latest",
+    "react-email": "latest",
+    "@react-email/components": "latest",
+    "expo-server-sdk": "latest",
+    "@t3-oss/env-core": "latest",
+    "pino": "latest",
+    "pino-axiom": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "typescript": "^5.0.0",
+    "vitest": "latest",
+    "@vitejs/plugin-react": "latest",
+    "pino-pretty": "latest"
+  }
+}

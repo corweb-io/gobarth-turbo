@@ -1,0 +1,16 @@
+{
+  "name": "@my-app/ui-native",
+  "version": "0.1.0",
+  "exports": {
+    "./*": "./src/*.tsx"
+  },
+  "dependencies": {
+    "@my-app/design-tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "react": "^19.2.4",
+    "react-native": "*",
+    "typescript": "^5.0.0"
+  }
+}

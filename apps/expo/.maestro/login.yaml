@@ -1,0 +1,10 @@
+appId: com.yourcompany.yourapp
+---
+- launchApp
+- assertVisible: "Sign in"
+- tapOn: "Email"
+- inputText: "test@example.com"
+- tapOn: "Password"
+- inputText: "testpassword"
+- tapOn: "Sign in"
+- assertVisible: "Welcome"
